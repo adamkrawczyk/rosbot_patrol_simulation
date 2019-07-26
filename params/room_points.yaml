@@ -1,0 +1,52 @@
+#name rooms must be numerated consequently as room<num>  
+
+rooms_num: 8   #remember that is enumerated from 0
+rooms:
+  room0:
+    name: "base/return point" #if it's set to 0,0,0 robot will go back to start point 
+    x:    0
+    y:    0
+    angle: 0
+
+  room1:
+    name: "room1-name"
+    x:    2.819
+    y:    -0.175
+    angle: 30
+
+  room2:
+    name: "room2-name"
+    x:    -3.489
+    y:    0.306
+    angle: 45   
+
+  room3:
+    name: "room3-name"
+    x:    -4.786
+    y:    3.412
+    angle: 236
+
+  room4:
+    name: "room4-name"
+    x:    -3.848
+    y:    6.496
+    angle: 359
+
+  room5:
+    name: "room5-name"
+    x:    2.682
+    y:    7.352
+    angle: 0   
+
+  room6:
+    name: "room6-name"
+    x:    5.651
+    y:    12.038
+    angle: 0
+
+  room7:
+    name: "room7-name"
+    x:    14.750
+    y:    11.480
+    angle: 0
+

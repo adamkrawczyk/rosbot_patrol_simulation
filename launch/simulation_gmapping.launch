@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <param name="use_sim_time" value="true"/>
+    <arg name="world" default="empty"/>
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find rosbot_patrol_simulation)/worlds/model.world"/>  
+    </include>
+    <include file="$(find rosbot_description)/launch/rosbot_gazebo.launch"/>
+    <include file="$(find rosbot_patrol_simulation)/launch/gmapping_only.launch" />  
+    <include file="$(find rosbot_patrol_simulation)/launch/move_base_only.launch" />    
+
+    <node pkg="tf" type="static_transform_publisher" name="laser_broadcaster" args="0 0 0 3.14 0 0 base_link laser_frame 100" />
+    <node name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen"/>  
+    
+</launch>
+
