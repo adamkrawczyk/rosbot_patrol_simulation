@@ -4,21 +4,14 @@ using namespace std;
 
 PatrolManager::PatrolManager(ros::NodeHandle &nh) {
   nh_ = nh;
-  cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+  cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 }
-
-
 
 PatrolManager::~PatrolManager() {}
 
-
-
-
-
 bool PatrolManager::makeSpin(double radians, bool clockwise) {
-
-  while (radians < 0)
-    radians += 2 * M_PI; // to perform rotation for more than 360 /-360
+  while (radians < 0)         //because of ros::tf drawbacks - you can call make spin method fiew times 
+    radians += 2 * M_PI;
   while (radians > 2 * M_PI)
     radians -= 2 * M_PI;
 
@@ -28,7 +21,8 @@ bool PatrolManager::makeSpin(double radians, bool clockwise) {
 
   tf::StampedTransform start_transform;
   tf::StampedTransform current_transform;
-  listener_.lookupTransform("/base_link", "/odom", ros::Time(0), start_transform);
+  listener_.lookupTransform("/base_link", "/odom", ros::Time(0),
+                            start_transform);
 
   geometry_msgs::Twist base_cmd;
   base_cmd.linear.x = base_cmd.linear.y = 0.0;
@@ -37,18 +31,18 @@ bool PatrolManager::makeSpin(double radians, bool clockwise) {
     base_cmd.angular.z = -base_cmd.angular.z;
 
   tf::Vector3 desired_turn_axis(0, 0, 1); // the axis we want to be rotating by
-  if (!clockwise)
-    desired_turn_axis = -desired_turn_axis;
-
+  if (!clockwise) {
+    desired_turn_axis = -desired_turn_axis; // changing direction of vector
+  }
   ros::Rate rate(5.0);
   bool done = false;
-  // bool spin_done = false;
 
   while (!done && nh_.ok()) {
     cmd_vel_pub_.publish(base_cmd);
     rate.sleep();
 
     try {
+      listener_.waitForTransform("/base_footprint", "/odom", ros::Time(0), ros::Duration(1.0)); //prevent start oscilation to have impact 
       listener_.lookupTransform("/base_link", "/odom", ros::Time(0),
                                 current_transform);
     } catch (tf::TransformException ex) {
@@ -60,7 +54,7 @@ bool PatrolManager::makeSpin(double radians, bool clockwise) {
         start_transform.inverse() * current_transform;
     tf::Vector3 actual_turn_axis = relative_transform.getRotation().getAxis();
     double angle_turned = relative_transform.getRotation().getAngle();
-    if (fabs(angle_turned) < 1.0e-2) {
+    if (fabs(angle_turned) < 0.02) { //to prevent taking oscilations as rotation
       continue;
     }
 
@@ -77,9 +71,6 @@ bool PatrolManager::makeSpin(double radians, bool clockwise) {
     return false;
   }
 }
-
-
-
 
 bool PatrolManager::moveToGoal(std::string the_name, float the_x, float the_y,
                                float the_theta) {
@@ -102,8 +93,7 @@ bool PatrolManager::moveToGoal(std::string the_name, float the_x, float the_y,
   goal.target_pose.pose.orientation.z = quaternion[2];
   goal.target_pose.pose.orientation.w = quaternion[3];
 
-  ROS_INFO("Sending goal location :");
-  printf("x: %f ,y: %f ,th: %f ", the_x,the_y,the_theta);
+  ROS_INFO("Sending goal location x: %f ,y: %f ,th: %f ", the_x, the_y, the_theta);
   ac.sendGoal(goal);
   ac.waitForResult();
 
@@ -136,4 +126,3 @@ PatrolManager::quaternion_from_euler(double roll, double pitch, double yaw) {
 
   return quat;
 }
-

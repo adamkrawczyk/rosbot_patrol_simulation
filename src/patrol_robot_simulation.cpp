@@ -10,12 +10,11 @@
 using namespace std;
 
 string params_path, email_from, email_to;
-bool room_reached = {0};
+bool room_reached = {0};          //flags defining succes of task
 bool starting_poit_reached = {0};
 ros::Time last_email_sent;
-ros::NodeHandle *nh_ptr;
-const double NUM_OF_SPINS =
-    1.5; // number of spins whitch robot perform for room scanning
+ros::NodeHandle *nh_ptr;          //pointer for node handle to make our method makeSpin publish to cmd_vel topic 
+const double PART_OF_SPIN = {1};  // part of spin whitch robot perform for room scanning [0;1]
 
 vector<string> room_names{};
 vector<double> x_coordinates{};
@@ -24,7 +23,7 @@ vector<double> th_coordinates{};
 
 void sendMail(const char *to, const char *from, const char *subject,
               const char *message) {
-  // int retval = -1;
+  ROS_INFO("Sending mail!!!");
   FILE *mailpipe = popen("/usr/lib/sendmail -t", "w");
   if (mailpipe != NULL) {
     fprintf(mailpipe, "To: %s\n", to);
@@ -33,11 +32,9 @@ void sendMail(const char *to, const char *from, const char *subject,
     fwrite(message, 1, strlen(message), mailpipe);
     fwrite(".\n", 1, 2, mailpipe);
     pclose(mailpipe);
-    // retval = 0;
   } else {
     perror("Failed to invoke sendmail");
   }
-  // return retval;
 }
 
 void saveConfigFiles(string path) {
@@ -58,32 +55,24 @@ void saveConfigFiles(string path) {
 void darknetCallback(const darknet_ros_msgs::BoundingBoxes &bb_msg) {
   
 
-  int size =
-      bb_msg.bounding_boxes.size(); // ros msgs are mapped onto std::vector
+  int size = bb_msg.bounding_boxes.size(); // ros msgs are mapped onto std::vector thats we can use size method
   for (int i = 0; i < size; i++) {
-    // ROS_INFO("checking for obj");
+    
     if ((bb_msg.bounding_boxes[i].Class == "fire hydrant") or
         (bb_msg.bounding_boxes[i].Class == "person")) {
       ROS_INFO("Found fire hydrant or person/people");
 
       ros::Time time_now = ros::Time::now();
-      if (time_now - last_email_sent  >= ros::Duration (10)) {
-        sendMail(email_to.c_str(), email_from.c_str(), "rosbot patrol node",
-                 "I have found something strange it could be invader");
+      if (time_now - last_email_sent  >= ros::Duration(10)) { //to prevent sending too many emails - causing to be marked as spam source
+        sendMail(email_to.c_str(), email_from.c_str(), "rosbot patrol node","I have found something strange it could be invader");
         last_email_sent = time_now;
       }
     }
   }
 }
 
-void espCallback(const rosbot_patrol_simulation::EspTrigger &trigger_msg) {
+void espCallback(const rosbot_patrol::EspTrigger &trigger_msg) {
   bool spin_made;
-
-  // const char[] command = "mail -s \"test\" " + email_addr + " <<< \"im in
-  // espCallback\" ";
-  // auto response = system("mail -s \"test\" " + email_addr + " <<< \"im in
-  // espCallback\" ") ;    // <--- place all this to darknetCb
-  // ROS_INFO("im in espCallback");
 
   if (trigger_msg.move == 1) {
     int esp_id = trigger_msg.id;
@@ -95,7 +84,7 @@ void espCallback(const rosbot_patrol_simulation::EspTrigger &trigger_msg) {
       ROS_INFO("I've reached destination");
     }
 
-    spin_made = pn.makeSpin(360 * NUM_OF_SPINS, 0);
+    spin_made = pn.makeSpin(2 * M_PI * PART_OF_SPIN, 0);
     if (spin_made) {
       ROS_INFO("I've just scanned room");
     }
@@ -103,13 +92,13 @@ void espCallback(const rosbot_patrol_simulation::EspTrigger &trigger_msg) {
     starting_poit_reached = pn.moveToGoal(room_names[0], x_coordinates[0],
                                           y_coordinates[0], th_coordinates[0]);
     if (starting_poit_reached) {
-      ROS_INFO("I've reached starting_poit_reached");
+      ROS_INFO("I've reached starting point");
     }
   }
 }
 
 int main(int argc, char *argv[]) {
-  ros::init(argc, argv, "patrol_robot_node");
+  ros::init(argc, argv, "patrol_robot_simulation");
   ros::NodeHandle nh("~");
   nh_ptr = &nh;
   nh.getParam("path_to_params", params_path);
@@ -121,10 +110,10 @@ int main(int argc, char *argv[]) {
 
   ros::Subscriber sub_esp = nh.subscribe("/motion_trigger", 1, espCallback);
   ros::Subscriber sub_darknet =
-      nh.subscribe("/darknet_ros/bounding_boxes", 100, darknetCallback);
+      nh.subscribe("/darknet_ros/bounding_boxes", 10, darknetCallback);
 
-  ros::Rate loop_rate(50);
-  last_email_sent = ros::Time::now();
+  ros::Rate loop_rate(10);
+  last_email_sent = ros::Time::now();  
   while (ros::ok) {
 
     ros::spinOnce();
