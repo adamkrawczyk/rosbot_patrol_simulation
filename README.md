@@ -2094,9 +2094,9 @@ To launch this I advise you to have the same code in robot and on your computer.
 
 On your computer you should see window with bounding boxes around things that our neural network recognized.
 
-If one of your sensor detects movement robot will go to poing assigned to this sensor and look for people, once it detect you should receive mail.
+If one of your sensor detects movement robot will go to point assigned to this sensor and look for people, once it detect you should receive mail.
 
-In case you have no motion sensor just publish to the topic robot is listening for move `$ rostopic pub /motion_trigger simulation/EspTrigger "id: 1 move: 1" ` with appropirate id numer. 
+In case you have no motion sensor just publish to the topic robot is listening for move `$ rostopic pub /motion_trigger simulation/EspTrigger "id: 1 move: 1" ` with appropriate id number. 
 
 
 
