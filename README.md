@@ -1609,7 +1609,7 @@ Then go to my github and clone to workspace repository from `ipv6-husarnet branc
 
 ```bash
 $ cd ~/ros_workspace/src
-$ git clone https://github.com/adamkrawczyk/rosserial.git
+$ git clone --single-branch --branch ipv6-husarnet https://github.com/adamkrawczyk/rosserial.git
 ```
 
 Next thing is to make our custom message to do so we have to make directory called msg and inside there make new file called EspTrigger.msg
