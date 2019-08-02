@@ -1,6 +1,14 @@
-# Patrol area
+---
+sidebar_label: 1. Security guard robot 
+id: security-guard-robot
+title: Security guard robot using YOLO and Wi-Fi sensor network
+---
 
-## Introduction:
+
+
+<!-- # Patrol area -->
+
+## Introduction
 
 Patrol area is a task for robot defined in 4 points.
 1. Having information about plausible threats
@@ -13,7 +21,7 @@ We will use rosbot platform with astra camera, ESP-32 microchips with motion sen
 
 Because project covers many fields I will show you and explain how to configure everything properly. We also devide project for simulation part and real robot part, this should give clear view about whole project.
 
-## Preparation:
+## Preparation
 1. I'm assuming that you have ros already installed - because rosbot currently works on ros kinetic it's necessary to have it installed, in case you don't have that check official docs : [ROS kinetic installation](http://wiki.ros.org/kinetic/Installation) .
 2. I also assume that you have your ros workspace configured with tutorial_pkg cloned to your workspace [tutorial_pkg](https://github.com/husarion/tutorial_pkg) because we will use some of the files from this repository. In case you don't just co go to 
 
@@ -26,12 +34,15 @@ We have to also clone rosbot description to do so use this command:
 `$ git clone https://github.com/husarion/rosbot_description.git`
 
 3. For image processing my advice is to use nvidia card with CUDA enabled (I won't show you how to do that because it's not the point).
-4. You can download whole package from github 
+4. You can download whole package from github
+
 a)simulation `$ git clone https://github.com/adamkrawczyk/rosbot_patrol_simulation.git`
+
 b)real_robot `$ git clone https://github.com/adamkrawczyk/rosbot_patrol.git`
+
 see my repositories - [github-adam-krawczyk](https://github.com/adamkrawczyk)
 
-## Starting project step by step:
+## Starting project step by step
 
 ### What to install
 1. Mailbox (setup this on robot also):
@@ -41,7 +52,7 @@ $ sudo apt install mailutils
 $ sudo apt-get install sendmail 
 $ sudo dpkg-reconfigure postfix
 $ sudo /etc/init.d/postfix reload 
-
+```
 2. yaml parser
 [yaml parser install](https://github.com/jbeder/yaml-cpp) 
 
@@ -81,6 +92,7 @@ $ catkin_create_pkg rosbot_patrol roscpp
 I highly recommend to use this names because you wouldn't be forced to change names in almost every following file.
 
 ## Simulation part
+
 For the first we will make whole simulation, test our algorithm and then implement that to real robot.
 Go to your pkg 
 
@@ -755,7 +767,7 @@ To file package.xml paste following code:
 </package>
 ```
 
-## create room points 
+## Create room points 
 We have to create points to where robot have to drive when motion sensor detect movement.
 The construct have very nice method to have this points so follow him with this tuturial.
 
@@ -1595,9 +1607,9 @@ angle: 0
 This are points for model.world world remember to set point0 to all zeroes - it's point to where robot will be coming back after patrolling room.
 
 ## Setup ESP32
-To make ESP32 work we need to make some steps first of them is to proper setup environment I will not be explaining here is link how to make that properly:
+To make ESP32 work we need to make some steps first of them is to proper setup environment, I will not be explaining because here is link to my project showing how to make that properly it is also basic usage:
 
-[setup esp32](https://www.hackster.io/donowak/internet-controlled-led-strip-using-esp32-arduino-2ca8a9#toc-preparing-esp32-firmware-2) 
+[setup esp32](https://www.hackster.io/khasreto/run-rosserial-over-the-internet-with-esp32-0615f5) 
 
 Once we have it working we need to setup rosserial to works with husarnet - this will enable us to use ESP32 microcontrollers for sending information about potential movement.
 To make it works we need to remove current version and install the one made for husarnet
@@ -2097,6 +2109,7 @@ On your computer you should see window with bounding boxes around things that ou
 If one of your sensor detects movement robot will go to point assigned to this sensor and look for people, once it detect you should receive mail.
 
 In case you have no motion sensor just publish to the topic robot is listening for move `$ rostopic pub /motion_trigger simulation/EspTrigger "id: 1 move: 1" ` with appropriate id number. 
+
 
 
 
