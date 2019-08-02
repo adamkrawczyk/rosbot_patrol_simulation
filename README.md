@@ -1,10 +1,3 @@
----
-sidebar_label: 1. Security guard robot 
-id: security-guard-robot
-title: Security guard robot using YOLO and Wi-Fi sensor network
----
-
-
 
 <!-- # Patrol area -->
 
