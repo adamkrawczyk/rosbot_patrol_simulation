@@ -4,6 +4,7 @@
 ## Introduction
 
 Patrol area is a task for robot defined in 4 points.
+
 1. Having information about plausible threats
 2. Checking area by robot
 3. Classifying threads
@@ -14,9 +15,11 @@ We will use rosbot platform with astra camera, ESP-32 microchips with motion sen
 
 Because project covers many fields I will show you and explain how to configure everything properly. We also devide project for simulation part and real robot part, this should give clear view about whole project.
 
+![rosbot_start_pic](https://user-images.githubusercontent.com/29305346/62448126-565d9980-b767-11e9-8437-6deaf8836d9d.png)
+
 ## Preparation
 1. I'm assuming that you have ros already installed - because rosbot currently works on ros kinetic it's necessary to have it installed, in case you don't have that check official docs : [ROS kinetic installation](http://wiki.ros.org/kinetic/Installation) .
-2. I also assume that you have your ros workspace configured with tutorial_pkg cloned to your workspace [tutorial_pkg](https://github.com/husarion/tutorial_pkg) because we will use some of the files from this repository. In case you don't just co go to 
+2. I also assume that you have your ros workspace configured with tutorial_pkg cloned to your workspace [tutorial_pkg](https://github.com/husarion/tutorial_pkg) because we will use some of the files from this repository. In case you don't just go to :
 
 cd <ros_ws>/src
 
@@ -38,8 +41,10 @@ see my repositories - [github-adam-krawczyk](https://github.com/adamkrawczyk)
 ## Starting project step by step
 
 ### What to install
+
 1. Mailbox (setup this on robot also):
 ..- chose internet setup set remaining parts as default during installation and setup
+
 ```
 $ sudo apt install mailutils 
 $ sudo apt-get install sendmail 
@@ -52,7 +57,7 @@ $ sudo /etc/init.d/postfix reload
 3. CNN we will be using darknet ros (install this in ~/ros_workspace/src) [darknet install](https://github.com/leggedrobotics/darknet_ros)
 
 To make it download you have to follow this instruction:
-1. Setup your ssh key [how to setup ssh key](https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html) 
+1. Setup your ssh key follow this instruction to do so - [setup ssh key](https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html) 
 2. `$ git clone --recursive git@github.com:leggedrobotics/darknet_ros.git`
 2. `$ cd ../`
 3. `$ catkin_make -DCMAKE_BUILD_TYPE=Release`
@@ -842,7 +847,7 @@ angle: 0
 ``` 
 ![rosbot_room_plan](https://user-images.githubusercontent.com/29305346/62054987-fde44480-b21a-11e9-9eb6-30d4f4706570.png)
 
-This are points for model.world world remember to set point0 to all zeroes - it's point to where robot will be comming back after patrolling room.
+This are points for model.world world remember to set point0 to all zeroes - it's point to where robot will be coming back after patrolling room.
 
 ## Yolo setup
 Next we need to setup our neural network - for that we will use pre-trained model. In config directory we create for this purpose config file.
@@ -984,7 +989,7 @@ Let's create our package if you haven't done that before.
 $ catkin_create_pkg rosbot_patrol roscpp
 ```
 
-We use whole algorithm from simulation but we add some more cool features, current version of rosbot has not enought computing power so we have to outsorce image processing, for this case we have to implement compressed image transport, also 
+We use whole algorithm from simulation but we add some more cool features, current version of rosbot has not enough computing power so we have to outsource image processing, for this case we have to implement compressed image transport, also 
 
 ## Main code
 
@@ -1207,7 +1212,7 @@ bool starting_poit_reached = {0};
 ros::Time last_email_sent;
 ros::NodeHandle *nh_ptr;
 const double NUM_OF_SPINS =
-1.5; // number of spins whitch robot perform for room scanning
+1.5; // number of spins which robot perform for room scanning
 
 vector<string> room_names{};
 vector<double> x_coordinates{};
@@ -1325,7 +1330,7 @@ return 0;
 }
 ```
 
-remember to change perrmision for file by running following command:
+remember to change permission for file by running following command:
 
 ```bash
 $ chmod +x patrol_robot.cpp
@@ -1342,6 +1347,7 @@ For this task we need to launch some things, we will create single launches for 
 4. lidar
 
 Create in launch directory file called rosbot_all_hardware.launch
+
 ```
 $ roscd rosbot_patrol
 $ mkdir launch
@@ -1367,7 +1373,7 @@ In this new file paste following code:
 
 <node pkg="tf" type="static_transform_publisher" name="camera_publisher" args="-0.03 0 0.18 0 0 0 base_link camera_link 100" />
 
-<!-- here you have to chose appropirate launch depending on your rosbot firmware - I'm strongly recommend to install new firmware it has some utilites including Extended Kalman Filter -->
+<!-- here you have to chose appropriate launch depending on your rosbot firmware - I'm strongly recommend to install new firmware it has some utilities including Extended Kalman Filter -->
 
 <!-- NEW FIRMWARE
 <include file="$(find rosbot)/launch/all.launch"/>
@@ -1528,7 +1534,7 @@ $ rosrun map_server map_saver -f rosbot_map.yaml
 ```
 
 ### find coordinates for move sensor
-If we already are able to drive on this map we have to find coordinates to where robot should drive. There is still the same method as douring simulation so use Ricardo's method :
+If we already are able to drive on this map we have to find coordinates to where robot should drive. There is still the same method as during simulation so use Ricardo's method :
 
 [how to get goal points](https://www.youtube.com/watch?v=p-ZG6E-PZVA&t=7s) start at 30:00. 
 
@@ -1540,7 +1546,7 @@ In rosbot_patrol pkg create new folder called params
 `$ mkdir params`
 `$ cd params && touch room_points.yaml`
 
-Put appropirate data, if you have less sensors just remove unnecessary room names if you have more rooms simply add more and change rooms_num to appropirate for your new room number. 
+Put appropriate data, if you have less sensors just remove unnecessary room names if you have more rooms simply add more and change rooms_num to appropriate for your new room number. 
 In room_points.yaml file place your points with following convention:
 
 ```yaml
@@ -1601,6 +1607,8 @@ This are points for model.world world remember to set point0 to all zeroes - it'
 
 ## Setup ESP32
 To make ESP32 work we need to make some steps first of them is to proper setup environment, I will not be explaining because here is link to my project showing how to make that properly it is also basic usage:
+
+Remember to set it up on your computer!
 
 [setup esp32](https://www.hackster.io/khasreto/run-rosserial-over-the-internet-with-esp32-0615f5) 
 
@@ -1731,7 +1739,7 @@ Connect motion sensor to ESP32:
 
 !! Start at point 2.2 [setup arduino IDE](http://wiki.ros.org/rosserial_arduino/Tutorials/Arduino%20IDE%20Setup)
 
-If we have husarnet setuped we can create new sketch for our arduino project:
+If we have husarnet set up we can create new sketch for our arduino project:
 
 1. In your sketchbook create new directory called esp_husarnet
 2. In this folder create file called esp_husarnet.ino
@@ -1913,7 +1921,7 @@ $ cd launch
 $ touch esp_connector.launch
 ```
 In this file paste following launch:
-Only what you have to take care of is to set appropirate port for each device I suggest to use 11411, 11412 and so on remember to it the same as in esp code.
+Only what you have to take care of is to set appropriate port for each device I suggest to use 11411, 11412 and so on remember to it the same as in esp code.
 
 ```xml
 <launch >
@@ -1936,7 +1944,7 @@ Only what you have to take care of is to set appropirate port for each device I 
 </launch>
 ```
 
-If you need more clients just add it if less you shuld remove unused or comment it.
+If you need more clients just add it if less you should remove unused or comment it.
 
 ## Darknet YOLO 
 We only will be launching image processing on computer but if you want to clone whole repository to your robot you can so don't be afraid of that.
@@ -2047,8 +2055,6 @@ In rosbot_patrol.launch paste this code:
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-<arg name="use_esp" default="true"/>
-
 <!-- Image compression -->
 <node pkg="image_transport" type="republish" name="rgb_compress" args="raw in:=/camera/rgb/image_raw compressed out:=/rgb_republish">
 <param name="compressed/mode" value="color"/>
@@ -2058,9 +2064,6 @@ In rosbot_patrol.launch paste this code:
 <include file="$(find rosbot_patrol)/launch/rosbot_all_algorithms.launch"/> 
 <arg name="map_file" default="$(find rosbot_patrol)/maps/testv2.yaml"/> <!-- map arg -->
 <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" respawn="true" />
-
-
-<include if="$(arg use_esp)" file="$(find rosbot_patrol)/launch/esp_connector.launch"/>
 
 <!-- patrol node -->
 <node pkg="rosbot_patrol" type="patrol_robot" name="patrolling_node" output="screen" respawn="true">
@@ -2079,14 +2082,24 @@ File rosbot_patrol_pc.launch is made for being launched form your personal compu
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
+<arg name="use_esp" default="true"/>
+
 <node pkg="image_transport" type="republish" name="rgb_decompress" args=" compressed in:=/rgb_republish raw out:=/rgb_raw" respawn="true">
 <param name="compressed/mode" value="color"/>
 </node>
 
 <include file="$(find rosbot_patrol)/launch/darknet_yolo_only.launch"/>
 
+<include if="$(arg use_esp)" file="$(find rosbot_patrol)/launch/esp_connector.launch"/>
+
 </launch>
 ```
+### Complete code
+a)simulation `$ git clone https://github.com/adamkrawczyk/rosbot_patrol_simulation.git`
+
+b)real_robot `$ git clone https://github.com/adamkrawczyk/rosbot_patrol.git`
+
+see my repositories - [github-adam-krawczyk](https://github.com/adamkrawczyk)
 
 ## Finishing
 
@@ -2103,6 +2116,6 @@ If one of your sensor detects movement robot will go to point assigned to this s
 
 In case you have no motion sensor just publish to the topic robot is listening for move `$ rostopic pub /motion_trigger simulation/EspTrigger "id: 1 move: 1" ` with appropriate id number. 
 
+At the end you should see on your computer something similar to this:
 
-
-
+![rosbot_final_result](https://user-images.githubusercontent.com/29305346/62448609-8d807a80-b768-11e9-964b-d8553c636900.png)
