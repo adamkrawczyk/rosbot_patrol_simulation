@@ -71,7 +71,7 @@ void darknetCallback(const darknet_ros_msgs::BoundingBoxes &bb_msg) {
   }
 }
 
-void espCallback(const rosbot_patrol::EspTrigger &trigger_msg) {
+void espCallback(const rosbot_patrol_simulation::EspTrigger &trigger_msg) {
   bool spin_made;
 
   if (trigger_msg.move == 1) {
@@ -84,7 +84,7 @@ void espCallback(const rosbot_patrol::EspTrigger &trigger_msg) {
       ROS_INFO("I've reached destination");
     }
 
-    spin_made = pn.makeSpin(2 * M_PI * PART_OF_SPIN, 0);
+    spin_made = pn.makeSpin(M_PI * PART_OF_SPIN, 0);
     if (spin_made) {
       ROS_INFO("I've just scanned room");
     }
