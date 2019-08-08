@@ -5,7 +5,7 @@
         <rosparam file="$(find tutorial_pkg)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
         <rosparam file="$(find tutorial_pkg)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
         <rosparam file="$(find tutorial_pkg)/config/local_costmap_params.yaml" command="load" />
-        <rosparam file="$(find tutorial_pkg)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find rosbot_patrol_simulation)/config/global_costmap_params.yaml" command="load" />
         <rosparam file="$(find tutorial_pkg)/config/trajectory_planner.yaml" command="load" />
     </node>
 

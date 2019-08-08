@@ -14,7 +14,6 @@ bool room_reached = {0};          //flags defining succes of task
 bool starting_poit_reached = {0};
 ros::Time last_email_sent;
 ros::NodeHandle *nh_ptr;          //pointer for node handle to make our method makeSpin publish to cmd_vel topic 
-const double PART_OF_SPIN = {1};  // part of spin whitch robot perform for room scanning [0;1]
 
 vector<string> room_names{};
 vector<double> x_coordinates{};
@@ -84,7 +83,8 @@ void espCallback(const rosbot_patrol_simulation::EspTrigger &trigger_msg) {
       ROS_INFO("I've reached destination");
     }
 
-    spin_made = pn.makeSpin(M_PI * PART_OF_SPIN, 0);
+    spin_made = pn.makeSpin(M_PI , 0);
+    spin_made = pn.makeSpin(M_PI , 0);
     if (spin_made) {
       ROS_INFO("I've just scanned room");
     }
