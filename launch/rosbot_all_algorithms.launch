@@ -1,0 +1,15 @@
+<launch>
+
+    <arg name="use_rosbot" default="true"/>
+    <arg name="use_gazebo" default="false"/>
+
+    <param if="$(arg use_gazebo)" name="use_sim_time" value="true"/>
+
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen"/>
+
+    <include file="$(find rosbot_patrol)/launch/move_base_only.launch"/>
+
+    <include file="$(find rosbot_patrol)/launch/amcl_only.launch"/>
+
+
+</launch>
