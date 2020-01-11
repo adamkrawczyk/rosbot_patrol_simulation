@@ -7,9 +7,9 @@
 
     <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen"/>
 
-    <include file="$(find rosbot_patrol)/launch/move_base_only.launch"/>
+    <include file="$(find rosbot_patrol_simulation)/launch/move_base_only.launch"/>
 
-    <include file="$(find rosbot_patrol)/launch/amcl_only.launch"/>
+    <include file="$(find rosbot_patrol_simulation)/launch/amcl_only.launch"/>
 
 
 </launch>

@@ -9,7 +9,7 @@
     <arg name="debug" default="false"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find rosbot_patrol_simulation)/worlds/model.world"/>  
+        <arg name="world_name" value="$(find rosbot_patrol_simulation)/worlds/husarion_flat_sonar_v2.world"/>  
     </include>
     <include file="$(find rosbot_description)/launch/rosbot_gazebo.launch"/>
     <include file="$(find rosbot_patrol_simulation)/launch/gmapping_only.launch" />  

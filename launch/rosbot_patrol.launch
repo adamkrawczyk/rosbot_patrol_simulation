@@ -4,10 +4,14 @@
     <include file="$(find rosbot_patrol_simulation)/launch/darknet_yolo_simulation_only.launch"/> 
 
     <include file="$(find rosbot_patrol_simulation)/launch/simulation_world.launch"/> 
-
+    
+    
+    <node pkg="rosbot_patrol_simulation" type="sonar_to_trigger.py" name="sonar_to_trigger" />
                         <!-- patrol node -->
     <node pkg="rosbot_patrol_simulation" type="patrol_robot_simulation" name="patrolling_node" output="screen" respawn="true">
 
+    
+   
                         <!-- path to file  with  params of points --> 
     <param name="path_to_params" type="string" value="$(find rosbot_patrol_simulation)/params/room_points.yaml" />
     <param name="email_to" type="string" value="*****@****.***" />  <!-- setup first mailbox on your device!!!!!! -->
